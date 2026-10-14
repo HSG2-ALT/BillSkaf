@@ -651,6 +651,69 @@
 
     </main>
 
+    <!-- FLOATING AI ASSISTANT WIDGET -->
+    <div id="aiChatWidget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Chat Window Container -->
+        <div id="aiChatContainer" class="hidden w-[350px] sm:w-[400px] h-[520px] glass-panel border border-neonCyan/40 rounded-3xl shadow-neon-cyan flex flex-col overflow-hidden mb-4 transition-all duration-300 transform scale-95 origin-bottom-right">
+            
+            <!-- Chat Header -->
+            <div class="p-4 border-b border-white/10 bg-slate-950/80 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="relative w-9 h-9 rounded-xl p-0.5 bg-gradient-neon shadow-neon-cyan">
+                        <img src="https://i.imgur.com/nsvHaZQ.jpeg" alt="AI Support Avatar" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                        <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-black"></span>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>BillSkaf Assistant</span>
+                            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-neonCyan/20 text-neonCyan">GPT-120B</span>
+                        </div>
+                        <div class="text-[10px] text-gray-400 font-mono">Online • Powered by Groq</div>
+                    </div>
+                </div>
+                <button onclick="toggleChatWidget()" class="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Chat Message Output Container -->
+            <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs">
+                <!-- Welcome Message -->
+                <div class="flex items-start gap-2.5">
+                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" class="w-6 h-6 rounded-md object-cover border border-neonCyan/50 mt-1 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                    <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none border border-white/10 text-gray-200 leading-relaxed max-w-[85%]">
+                        👋 Welcome to **BillSkaf Support**! How can I assist you with our laptops, phones, games, or software today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Prompt Chips -->
+            <div id="quickPrompts" class="px-3 py-2 border-t border-white/5 bg-black/40 flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none">
+                <button onclick="sendQuickPrompt('Tell me about SkafPhone Ultra specs')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-neonCyan/20 border border-white/10 text-[10px] text-gray-300 hover:text-neonCyan transition-all">📱 SkafPhone Ultra</button>
+                <button onclick="sendQuickPrompt('What makes Bill OS unique?')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-neonPurple/20 border border-white/10 text-[10px] text-gray-300 hover:text-neonPurple transition-all">⚡ Bill OS</button>
+                <button onclick="sendQuickPrompt('SkafBook Pro X specs and price')" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-neonGold/20 border border-white/10 text-[10px] text-gray-300 hover:text-neonGold transition-all">💻 SkafBook Pro</button>
+            </div>
+
+            <!-- Chat Input Bar -->
+            <form id="chatForm" onsubmit="handleChatSubmit(event)" class="p-3 border-t border-white/10 bg-slate-950 flex items-center gap-2">
+                <input type="text" id="chatInput" placeholder="Ask about BillSkaf tech..." required class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-neonCyan transition-colors">
+                <button type="submit" id="chatSendBtn" class="w-9 h-9 rounded-xl bg-gradient-neon flex items-center justify-center text-white shadow-neon-cyan hover:shadow-neon-purple transition-all flex-shrink-0">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+
+        </div>
+
+        <!-- Floating Chat Toggle Trigger Button -->
+        <button onclick="toggleChatWidget()" id="chatTriggerBtn" class="relative group p-4 rounded-full bg-gradient-neon text-white shadow-neon-cyan hover:shadow-neon-purple transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+            <i class="fa-solid fa-headset text-2xl"></i>
+            <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neonCyan opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-neonCyan"></span>
+            </span>
+        </button>
+    </div>
+
     <!-- Detailed Product Modal Overlay -->
     <div id="productModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg">
         <div class="glass-panel max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-white/20 relative">
@@ -1049,6 +1112,127 @@
                 document.getElementById('mobileMenu').classList.add('hidden');
             });
         });
+
+        // --- GROQ AI CHATBOT INTEGRATION ---
+        const GROQ_API_KEY = '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';
+        const GROQ_MODEL = 'openai/gpt-oss-120b';
+
+        const SYSTEM_PROMPT = `You are the official AI Support Assistant for BillSkaf Technologies. 
+Your tone is professional, futuristic, and helpful. 
+BillSkaf creates flagship laptops (SkafBook Pro X, SkafPad Studio), high-performance smartphones (SkafPhone Ultra), software/OS (Bill OS Titanium, Bill AI Creator Suite), spatial audio hardware (SkafPods Pro), and AAA games (HyperShift Racing, Realm Crafter Online).
+Always answer questions clearly and accurately regarding specs, pre-orders, warranty, and company vision. Keep answers concise, formatted nicely with bullet points or bold text where appropriate.`;
+
+        let chatHistory = [
+            { role: "system", content: SYSTEM_PROMPT }
+        ];
+
+        function toggleChatWidget() {
+            const container = document.getElementById('aiChatContainer');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                setTimeout(() => container.classList.remove('scale-95'), 10);
+            } else {
+                container.classList.add('scale-95');
+                setTimeout(() => container.classList.add('hidden'), 200);
+            }
+        }
+
+        function appendMessage(role, text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5';
+
+            if (role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="bg-gradient-neon text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" class="w-6 h-6 rounded-md object-cover border border-neonCyan/50 mt-1 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                    <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none border border-white/10 text-gray-200 leading-relaxed max-w-[85%]">
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            }
+
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const indicator = document.createElement('div');
+            indicator.id = 'typingIndicator';
+            indicator.className = 'flex items-start gap-2.5';
+            indicator.innerHTML = `
+                <img src="https://i.imgur.com/nsvHaZQ.jpeg" class="w-6 h-6 rounded-md object-cover border border-neonCyan/50 mt-1 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none border border-white/10 text-neonCyan flex items-center gap-1 font-mono text-[10px]">
+                    <span class="animate-bounce">●</span>
+                    <span class="animate-bounce" style="animation-delay: 0.2s">●</span>
+                    <span class="animate-bounce" style="animation-delay: 0.4s">●</span>
+                </div>
+            `;
+            chatMessages.appendChild(indicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            input.value = '';
+            appendMessage('user', prompt);
+            chatHistory.push({ role: "user", content: prompt });
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${GROQ_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL,
+                        messages: chatHistory,
+                        temperature: 0.7,
+                        max_tokens: 400
+                    })
+                });
+
+                removeTypingIndicator();
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const botReply = data.choices[0]?.message?.content || "I apologize, but I couldn't fetch a response right now. Please try again.";
+                
+                chatHistory.push({ role: "assistant", content: botReply });
+                appendMessage('assistant', botReply);
+
+            } catch (err) {
+                removeTypingIndicator();
+                appendMessage('assistant', '⚠️ Unable to connect to Groq AI servers right now. Please verify network access or try again shortly.');
+                console.error("Groq AI API error:", err);
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            document.getElementById('chatInput').value = promptText;
+            handleChatSubmit(new Event('submit'));
+        }
 
         // Window Init
         window.onload = function() {
