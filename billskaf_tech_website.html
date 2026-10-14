@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BillSkaf | Next-Gen Hardware, Software & Gaming Ecosystem</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#050508',
+                        panelBg: 'rgba(12, 13, 22, 0.85)',
+                        glassBorder: 'rgba(255, 255, 255, 0.12)',
+                        neonCyan: '#00f2fe',
+                        neonPurple: '#9d4edd',
+                        neonGold: '#ffaa00',
+                        neonPink: '#ff007f'
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 30px rgba(0, 242, 254, 0.35)',
+                        'neon-purple': '0 0 30px rgba(157, 78, 221, 0.35)',
+                        'neon-gold': '0 0 30px rgba(255, 170, 0, 0.35)',
+                        'glow-lg': '0 0 60px rgba(0, 242, 254, 0.2)'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'shimmer': 'shimmer 2.5s infinite linear'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-18px) rotate(1.5deg)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050508;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass-panel {
+            background: rgba(14, 16, 27, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-panel-hover {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel-hover:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 15px 35px -10px rgba(0, 242, 254, 0.3);
+            transform: translateY(-6px);
+        }
+        .text-gradient-cyan-purple {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 40%, #9d4edd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-gradient-neon {
+            background: linear-gradient(135deg, #00f2fe 0%, #9d4edd 100%);
+        }
+        
+        /* Device SVG Stylings */
+        .device-svg-glow {
+            filter: drop-shadow(0px 0px 12px rgba(0, 242, 254, 0.4));
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #1c2033; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+    </style>
+</head>
+<body class="relative selection:bg-neonCyan selection:text-black">
+
+    <!-- Interactive Canvas Background -->
+    <canvas id="particleCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 w-full glass-panel border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo with Image & SVG Fallback -->
+            <a href="#home" class="flex items-center gap-3.5 group">
+                <div class="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-neon p-0.5 shadow-neon-cyan group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                         alt="BillSkaf Logo" 
+                         class="w-full h-full object-cover rounded-[14px]"
+                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS+LOGO';">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black tracking-wider text-white leading-none">BILL<span class="text-gradient-cyan-purple">SKAF</span></span>
+                    <span class="text-[9px] font-mono tracking-widest text-gray-400 uppercase">Hardware & Software</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-8 text-xs uppercase tracking-widest font-semibold text-gray-300">
+                <a href="#home" class="hover:text-neonCyan transition-colors">Home</a>
+                <a href="#products" class="hover:text-neonCyan transition-colors">Devices & Games</a>
+                <a href="#studio" class="hover:text-neonCyan transition-colors">Customizer Studio</a>
+                <a href="#specs" class="hover:text-neonCyan transition-colors">Tech Benchmarks</a>
+                <a href="#ecosystem" class="hover:text-neonCyan transition-colors">Ecosystem</a>
+                <a href="#about" class="hover:text-neonCyan transition-colors">About Us</a>
+            </nav>
+
+            <!-- Navigation Action CTA -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="#studio" class="relative group px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider text-white bg-gradient-neon shadow-neon-cyan hover:shadow-neon-purple transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-sliders mr-2"></i> Customizer Studio
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-gray-400 hover:text-white glass-panel focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden glass-panel border-t border-white/10 px-6 py-6 space-y-4">
+            <a href="#home" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">Home</a>
+            <a href="#products" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">Devices & Games</a>
+            <a href="#studio" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">Customizer Studio</a>
+            <a href="#specs" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">Tech Benchmarks</a>
+            <a href="#ecosystem" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">Ecosystem</a>
+            <a href="#about" class="block text-gray-300 hover:text-neonCyan py-2 mobile-link font-medium">About Us</a>
+            <a href="#studio" class="block text-center py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-neon shadow-neon-cyan">
+                Customizer Studio
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- HERO SECTION -->
+        <section id="home" class="min-h-[calc(100vh-5rem)] flex items-center justify-center relative py-16 lg:py-24 overflow-hidden">
+            <!-- Glow Background Highlights -->
+            <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neonCyan/15 rounded-full filter blur-[140px] pointer-events-none animate-pulse-glow"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neonPurple/15 rounded-full filter blur-[140px] pointer-events-none animate-pulse-glow" style="animation-delay: 2s;"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Hero Left Column -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-panel border-neonCyan/40 text-neonCyan text-xs font-mono font-semibold tracking-wider uppercase shadow-neon-cyan">
+                        <span class="w-2.5 h-2.5 rounded-full bg-neonCyan animate-ping"></span>
+                        <span>Now Introducing Flagship Hardware & Silicon</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white">
+                        Laptops. Phones. <br>
+                        Software. <span class="text-gradient-cyan-purple">Games.</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-gray-400 font-normal max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        BillSkaf is evolving from elite gaming & software engineering into building cutting-edge smartphones, ultra-thin silicon laptops, unified Operating Systems, and AAA game titles.
+                    </p>
+
+                    <!-- Interactive CTAs -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#products" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-widest text-white bg-gradient-neon shadow-neon-cyan hover:shadow-neon-purple transition-all transform hover:-translate-y-1 text-center">
+                            Explore Devices <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#studio" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-widest text-gray-300 glass-panel hover:bg-white/10 hover:text-white transition-all border-white/10 text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-neonCyan"></i> Customizer Studio
+                        </a>
+                    </div>
+
+                    <!-- Hardware Spec Quick Counters -->
+                    <div class="pt-8 border-t border-white/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-white font-mono">4.2<span class="text-neonCyan">GHz</span></div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest font-mono mt-1">Custom Silicon</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-white font-mono">240<span class="text-neonPurple">Hz</span></div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest font-mono mt-1">AMOLED Displays</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-white font-mono">0.8<span class="text-neonGold">ms</span></div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest font-mono mt-1">Sync Latency</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Column: Hardware & Media Graphic Stack -->
+                <div class="lg:col-span-5 relative flex justify-center items-center">
+                    <div class="relative w-full max-w-md h-[460px]">
+                        
+                        <!-- Main Visual: Laptop Mockup -->
+                        <div class="absolute top-0 left-0 w-[88%] glass-panel rounded-2xl p-4 shadow-2xl border border-white/20 animate-float z-10">
+                            <div class="relative bg-slate-950 rounded-xl overflow-hidden aspect-[16/10] border border-white/10 flex flex-col justify-between p-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-neonCyan border-b border-white/10 pb-2">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-microchip"></i> Bill OS Titanium</span>
+                                    <span class="bg-neonCyan/20 px-2 py-0.5 rounded text-neonCyan font-bold">240 FPS</span>
+                                </div>
+                                <div class="my-auto text-center py-4">
+                                    <!-- Embedded Logo Graphics -->
+                                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                         alt="Laptop Logo" 
+                                         class="w-16 h-16 object-cover rounded-xl mx-auto shadow-neon-cyan mb-2 border border-neonCyan/50"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                                    <div class="text-sm font-black text-white">SkafBook Pro X</div>
+                                    <div class="text-[10px] text-gray-400 font-mono">Custom Silicon Neural Engine</div>
+                                </div>
+                                <div class="flex justify-between items-center text-[9px] text-gray-400 font-mono">
+                                    <span>Core Temp: 32°C</span>
+                                    <span class="text-neonPurple">Ray-Tracing Active</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center px-2 text-xs text-gray-300 font-mono">
+                                <span class="font-bold text-white"><i class="fa-solid fa-laptop text-neonCyan mr-1"></i> Laptop Mode</span>
+                                <span class="text-neonCyan text-[10px]">32GB Unified RAM</span>
+                            </div>
+                        </div>
+
+                        <!-- Secondary Visual: Phone Floating Graphic -->
+                        <div class="absolute bottom-2 right-0 w-[48%] glass-panel rounded-3xl p-3 shadow-neon-purple border border-neonPurple/40 animate-float-delayed z-20">
+                            <div class="bg-slate-950 rounded-[22px] p-3 border border-white/20 text-center flex flex-col items-center">
+                                <div class="w-10 h-2 bg-black rounded-full mb-3"></div>
+                                <div class="w-12 h-12 rounded-xl border border-neonPurple/50 p-0.5 mb-2 overflow-hidden shadow-neon-purple">
+                                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                         alt="Phone Logo" 
+                                         class="w-full h-full object-cover rounded-lg"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/9d4edd?text=BS';">
+                                </div>
+                                <div class="text-xs font-bold text-white">SkafPhone Ultra</div>
+                                <div class="text-[9px] text-neonPurple font-mono mt-0.5">5G Ray-Tracing</div>
+                            </div>
+                        </div>
+
+                        <!-- Accent Floating Pill: Game Title -->
+                        <div class="absolute -bottom-2 left-4 glass-panel border border-neonGold/40 p-3 rounded-2xl shadow-neon-gold z-30 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-red-600 flex items-center justify-center text-white font-bold text-lg">
+                                <i class="fa-solid fa-gamepad"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-extrabold text-white">HyperShift Racing</div>
+                                <div class="text-[10px] text-neonGold font-mono">Cross-Play Ready</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Dynamic Category Filter Showcase -->
+        <section id="products" class="py-20 bg-darkBg/90 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-neonCyan">Complete Product Lineup</span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-white mt-2 tracking-tight">Phones, Laptops, OS & Games</h2>
+                    <p class="text-gray-400 mt-3 text-sm">Every piece of hardware and software engineered to work in sync.</p>
+                </div>
+
+                <!-- Navigation Category Selector -->
+                <div class="flex justify-center mb-12 overflow-x-auto py-2 px-2">
+                    <div class="flex items-center gap-2 glass-panel p-1.5 rounded-2xl border-white/10">
+                        <button onclick="filterCategory('all')" id="tab-all" class="category-tab active px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-neon shadow-neon-cyan transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-border-all"></i> All Products
+                        </button>
+                        <button onclick="filterCategory('laptops')" id="tab-laptops" class="category-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-laptop text-neonCyan"></i> Laptops
+                        </button>
+                        <button onclick="filterCategory('phones')" id="tab-phones" class="category-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-mobile-screen text-neonPurple"></i> Phones
+                        </button>
+                        <button onclick="filterCategory('software')" id="tab-software" class="category-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-code text-neonGold"></i> Software & OS
+                        </button>
+                        <button onclick="filterCategory('games')" id="tab-games" class="category-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-neonPink"></i> Games
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Grid for Cards -->
+                <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Cards are dynamically rendered via Javascript -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Interactive Customizer Studio -->
+        <section id="studio" class="py-20 relative bg-slate-950/80 border-y border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-14">
+                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-neonPurple">BillSkaf Interactive Studio</span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-white mt-2">Custom Device Configurator</h2>
+                    <p class="text-gray-400 mt-2 text-sm">Select hardware frames, change accent colors, and test specs live.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center glass-panel rounded-3xl p-6 sm:p-10 border-white/10">
+                    
+                    <!-- Left Config Controls -->
+                    <div class="lg:col-span-5 space-y-6">
+                        
+                        <!-- Select Device -->
+                        <div>
+                            <label class="text-xs font-mono uppercase text-neonCyan tracking-wider block mb-2 font-bold">1. Select Hardware Frame</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="setCustomizerDevice('laptop')" id="deviceBtnLaptop" class="py-3 px-4 rounded-xl border border-neonCyan bg-neonCyan/10 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
+                                    <i class="fa-solid fa-laptop text-neonCyan"></i> SkafBook Pro X
+                                </button>
+                                <button onclick="setCustomizerDevice('phone')" id="deviceBtnPhone" class="py-3 px-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
+                                    <i class="fa-solid fa-mobile-screen"></i> SkafPhone Ultra
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Color Picker -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-mono uppercase text-gray-300 tracking-wider font-bold">2. Finish & Ambient Accent</label>
+                                <span id="colorNameLabel" class="text-xs font-mono font-bold text-neonCyan">Aurora Cyan</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="changeCustomizerColor('cyan', 'Aurora Cyan', '#00f2fe')" class="w-10 h-10 rounded-xl bg-[#00f2fe] border-2 border-white shadow-neon-cyan transform hover:scale-110 transition-transform focus:outline-none"></button>
+                                <button onclick="changeCustomizerColor('purple', 'Neon Violet', '#9d4edd')" class="w-10 h-10 rounded-xl bg-[#9d4edd] border-2 border-transparent hover:border-white transform hover:scale-110 transition-transform focus:outline-none"></button>
+                                <button onclick="changeCustomizerColor('gold', 'Solar Gold', '#ffaa00')" class="w-10 h-10 rounded-xl bg-[#ffaa00] border-2 border-transparent hover:border-white transform hover:scale-110 transition-transform focus:outline-none"></button>
+                                <button onclick="changeCustomizerColor('black', 'Cyber Black', '#1c1f2e')" class="w-10 h-10 rounded-xl bg-[#1c1f2e] border-2 border-transparent hover:border-white transform hover:scale-110 transition-transform focus:outline-none"></button>
+                            </div>
+                        </div>
+
+                        <!-- Processor Specification Tier -->
+                        <div>
+                            <label class="text-xs font-mono uppercase text-gray-300 tracking-wider block mb-2 font-bold">3. Silicon & Memory Architecture</label>
+                            <div class="space-y-2">
+                                <label onclick="updateCustomizerPrice(1899)" class="flex items-center justify-between p-3.5 rounded-xl border border-neonCyan/40 bg-neonCyan/5 cursor-pointer">
+                                    <div class="flex items-center gap-3">
+                                        <input type="radio" name="spec" checked class="accent-neonCyan">
+                                        <div>
+                                            <div class="text-xs font-bold text-white">Skaf Silicon M3 Chip</div>
+                                            <div class="text-[10px] text-gray-400 font-mono">16-Core CPU / 32GB Unified Memory</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-mono text-neonCyan font-bold">$1,899</span>
+                                </label>
+                                <label onclick="updateCustomizerPrice(2499)" class="flex items-center justify-between p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-white/30">
+                                    <div class="flex items-center gap-3">
+                                        <input type="radio" name="spec" class="accent-neonCyan">
+                                        <div>
+                                            <div class="text-xs font-bold text-white">Skaf Silicon M3 Ultra Max</div>
+                                            <div class="text-[10px] text-gray-400 font-mono">32-Core CPU / 64GB Unified Memory</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-mono text-gray-300 font-bold">$2,499</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Summary & Pre-order Action -->
+                        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                            <div>
+                                <div class="text-[10px] text-gray-400 font-mono uppercase">Configured Price</div>
+                                <div class="text-3xl font-black text-white font-mono" id="customizerPrice">$1,899</div>
+                            </div>
+                            <button onclick="triggerNotification('Pre-order config saved to your BillSkaf account!')" class="px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-neon shadow-neon-cyan hover:shadow-neon-purple transition-all">
+                                Save Build
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Visual Live Render Preview -->
+                    <div class="lg:col-span-7 flex flex-col items-center justify-center p-8 bg-black/60 rounded-2xl border border-white/10 min-h-[420px] relative overflow-hidden">
+                        
+                        <div id="devicePreviewContainer" class="relative w-full flex items-center justify-center">
+                            
+                            <!-- Laptop Visual Component -->
+                            <div id="visualLaptop" class="w-full max-w-md flex flex-col items-center">
+                                <div id="laptopScreenBody" class="w-full h-60 rounded-t-2xl border-4 border-neonCyan p-4 bg-slate-950 relative flex flex-col justify-between shadow-neon-cyan transition-colors duration-500">
+                                    <div class="flex justify-between items-center text-[10px] text-gray-400 font-mono">
+                                        <span class="flex items-center gap-2"><i class="fa-solid fa-cube text-neonCyan"></i> Bill OS Titanium</span>
+                                        <span class="text-neonCyan font-bold">240 Hz ProMotion</span>
+                                    </div>
+                                    
+                                    <!-- Center Screen Visual -->
+                                    <div class="text-center my-auto">
+                                        <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                             alt="Studio Logo" 
+                                             class="w-16 h-16 object-cover rounded-xl mx-auto shadow-neon-cyan mb-2 border border-white/20"
+                                             onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                                        <div class="text-base font-black text-white">SkafBook Studio Architecture</div>
+                                        <div class="text-xs text-neonCyan font-mono mt-1">Ray-Tracing Active</div>
+                                    </div>
+
+                                    <div class="w-full bg-white/5 rounded-lg p-2 text-[10px] font-mono text-gray-400 flex justify-between">
+                                        <span>GPU load: 14%</span>
+                                        <span>Temp: 31°C</span>
+                                    </div>
+                                </div>
+                                <div id="laptopBaseBody" class="w-[106%] h-6 bg-slate-900 rounded-b-xl border-t-2 border-white/30 relative flex justify-center items-center">
+                                    <div class="w-16 h-1 bg-neonCyan rounded-full shadow-neon-cyan"></div>
+                                </div>
+                            </div>
+
+                            <!-- Phone Visual Component (Hidden initially) -->
+                            <div id="visualPhone" class="hidden w-64 h-[380px] rounded-[38px] border-4 border-neonCyan p-3 bg-slate-950 flex flex-col justify-between shadow-neon-cyan transition-colors duration-500 relative">
+                                <div class="w-16 h-4 bg-black rounded-full mx-auto flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full bg-neonCyan"></div>
+                                </div>
+                                
+                                <div class="text-center my-auto">
+                                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                         alt="Phone Screen Logo" 
+                                         class="w-16 h-16 object-cover rounded-xl mx-auto shadow-neon-cyan mb-3 border border-white/20"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                                    <div class="text-base font-black text-white">SkafPhone Ultra</div>
+                                    <div class="text-xs text-neonCyan font-mono mt-1">Bill OS Mobile</div>
+                                </div>
+
+                                <div class="w-full bg-white/5 rounded-xl p-2 text-[10px] font-mono text-gray-400 flex justify-between">
+                                    <span>5G Ultra</span>
+                                    <span>100% Charged</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Technical Benchmarks & Interactive Performance Metric -->
+        <section id="specs" class="py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-neonCyan">Silicon Performance</span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-white mt-2">Built To Lead Benchmarks</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Hardware Performance Widget 1 -->
+                    <div class="glass-panel p-8 rounded-3xl glass-panel-hover border-white/10 relative">
+                        <div class="w-14 h-14 rounded-2xl bg-neonCyan/10 border border-neonCyan/30 flex items-center justify-center text-neonCyan text-2xl mb-6 shadow-neon-cyan">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Custom Silicon Cores</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-6">
+                            Architected with hardware ray-tracing accelerators and neural processing units embedded directly into every laptop and phone.
+                        </p>
+                        <!-- Progress Bar Visual -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-400">Ray Tracing Speed</span>
+                                <span class="text-neonCyan font-bold">3.8x Faster</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                                <div class="bg-neonCyan h-full w-[92%] shadow-neon-cyan"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hardware Performance Widget 2 -->
+                    <div class="glass-panel p-8 rounded-3xl glass-panel-hover border-white/10 relative">
+                        <div class="w-14 h-14 rounded-2xl bg-neonPurple/10 border border-neonPurple/30 flex items-center justify-center text-neonPurple text-2xl mb-6 shadow-neon-purple">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Gaming Frame Rates</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-6">
+                            Play AAA games like HyperShift Racing at continuous 240 FPS on desktop laptops and 144 FPS on SkafPhone devices.
+                        </p>
+                        <!-- Progress Bar Visual -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-400">FPS Stability</span>
+                                <span class="text-neonPurple font-bold">240 FPS Constant</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                                <div class="bg-neonPurple h-full w-[96%] shadow-neon-purple"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hardware Performance Widget 3 -->
+                    <div class="glass-panel p-8 rounded-3xl glass-panel-hover border-white/10 relative">
+                        <div class="w-14 h-14 rounded-2xl bg-neonGold/10 border border-neonGold/30 flex items-center justify-center text-neonGold text-2xl mb-6 shadow-neon-gold">
+                            <i class="fa-solid fa-battery-charging"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Thermal Efficiency</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-6">
+                            Next-gen liquid cooling vapor chambers keep laptops cool to the touch and extend battery life up to 28 hours.
+                        </p>
+                        <!-- Progress Bar Visual -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-400">Battery Efficiency</span>
+                                <span class="text-neonGold font-bold">28 Hours</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                                <div class="bg-neonGold h-full w-[88%] shadow-neon-gold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Seamless Ecosystem Overview Section -->
+        <section id="ecosystem" class="py-20 bg-slate-950/90 relative overflow-hidden border-y border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    
+                    <div>
+                        <span class="text-xs font-mono font-bold uppercase tracking-widest text-neonCyan">Unified OS Architecture</span>
+                        <h2 class="text-3xl sm:text-5xl font-black text-white mt-2 mb-6 leading-tight">
+                            One OS. All Your Devices.
+                        </h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                            Bill OS Titanium links your SkafBook laptop, SkafPhone smartphone, game library, and AI software suite together. Copy files on your laptop and paste directly into your phone instantly.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-4 rounded-2xl glass-panel border-white/10">
+                                <div class="p-3 rounded-xl bg-neonCyan/10 text-neonCyan text-xl"><i class="fa-solid fa-laptop"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Laptop to Phone Continuity</h4>
+                                    <p class="text-xs text-gray-400 mt-0.5">Start coding software on laptop, seamlessly finish on phone with identical UI state.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4 p-4 rounded-2xl glass-panel border-white/10">
+                                <div class="p-3 rounded-xl bg-neonPurple/10 text-neonPurple text-xl"><i class="fa-solid fa-gamepad"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Cross-Device Game Sync</h4>
+                                    <p class="text-xs text-gray-400 mt-0.5">Pause AAA games on your laptop and continue playing on phone with zero delay.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ecosystem Node Graphical Visualizer -->
+                    <div class="relative flex items-center justify-center p-8 glass-panel rounded-3xl border-white/10 min-h-[420px]">
+                        
+                        <!-- Central Ecosystem Hub Logo -->
+                        <div class="relative z-20 w-32 h-32 rounded-3xl bg-gradient-neon flex flex-col items-center justify-center text-white shadow-neon-cyan p-1 animate-pulse-glow">
+                            <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                 alt="BillSkaf Hub Logo" 
+                                 class="w-full h-full object-cover rounded-2xl"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                        </div>
+
+                        <!-- Orbiting Product Nodes -->
+                        <div class="absolute top-8 left-8 glass-panel p-3 rounded-xl border-neonCyan/40 flex items-center gap-2 shadow-lg animate-float">
+                            <i class="fa-solid fa-laptop text-neonCyan"></i>
+                            <span class="text-xs font-bold text-white">SkafBook</span>
+                        </div>
+                        <div class="absolute bottom-8 right-8 glass-panel p-3 rounded-xl border-neonPurple/40 flex items-center gap-2 shadow-lg animate-float-delayed">
+                            <i class="fa-solid fa-mobile-screen text-neonPurple"></i>
+                            <span class="text-xs font-bold text-white">SkafPhone</span>
+                        </div>
+                        <div class="absolute top-10 right-8 glass-panel p-3 rounded-xl border-neonGold/40 flex items-center gap-2 shadow-lg animate-float">
+                            <i class="fa-solid fa-brain text-neonGold"></i>
+                            <span class="text-xs font-bold text-white">Bill AI</span>
+                        </div>
+                        <div class="absolute bottom-10 left-8 glass-panel p-3 rounded-xl border-neonPink/40 flex items-center gap-2 shadow-lg animate-float-delayed">
+                            <i class="fa-solid fa-gamepad text-neonPink"></i>
+                            <span class="text-xs font-bold text-white">AAA Games</span>
+                        </div>
+
+                        <!-- SVG Rays -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none stroke-neonCyan/20" stroke-width="1.5" stroke-dasharray="4 4">
+                            <line x1="50%" y1="50%" x2="20%" y2="20%" />
+                            <line x1="50%" y1="50%" x2="80%" y2="80%" />
+                            <line x1="50%" y1="50%" x2="80%" y2="20%" />
+                            <line x1="50%" y1="50%" x2="20%" y2="80%" />
+                        </svg>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- About Vision Section -->
+        <section id="about" class="py-20 relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                
+                <div class="w-20 h-20 rounded-2xl p-1 bg-gradient-neon mx-auto mb-6 shadow-neon-cyan">
+                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                         alt="About Logo" 
+                         class="w-full h-full object-cover rounded-xl"
+                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                </div>
+
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-neonCyan">Our Mission</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white mt-2 mb-6">The Story of BillSkaf</h2>
+                <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+                    We started with a vision: build world-class games and software. But great software deserves extraordinary hardware. That is why BillSkaf expanded into crafting flagship smartphones, ultra-thin silicon laptops, custom AI chips, and unified operating systems.
+                </p>
+
+                <div class="inline-flex items-center gap-4 p-4 rounded-2xl glass-panel border-white/10 text-left">
+                    <div class="w-10 h-10 rounded-xl bg-neonCyan/20 border border-neonCyan flex items-center justify-center text-neonCyan font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Engineered For Future Tech</div>
+                        <div class="text-xs text-gray-400">Zero compromises on hardware, software, or gaming performance.</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Detailed Product Modal Overlay -->
+    <div id="productModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg">
+        <div class="glass-panel max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-white/20 relative">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-2xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent">
+                <!-- Modal details rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-panel border-neonCyan/50 p-4 rounded-2xl shadow-neon-cyan flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-neonCyan text-xl"></i>
+        <span id="toastText" class="text-xs font-semibold text-white">Notification text</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-white/10 relative z-10 pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl p-0.5 bg-gradient-neon shadow-neon-cyan overflow-hidden">
+                            <img src="https://i.imgur.com/nsvHaZQ.jpeg" 
+                                 alt="Footer Logo" 
+                                 class="w-full h-full object-cover rounded-lg"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                        </div>
+                        <span class="text-xl font-black text-white">BILL<span class="text-gradient-cyan-purple">SKAF</span></span>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Flagship laptops, laptops, smartphones, unified OS software, AI modules, and AAA cross-play games.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">Devices</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#products" onclick="filterCategory('laptops')" class="hover:text-neonCyan transition-colors">SkafBook Pro X</a></li>
+                        <li><a href="#products" onclick="filterCategory('phones')" class="hover:text-neonCyan transition-colors">SkafPhone Ultra</a></li>
+                        <li><a href="#studio" class="hover:text-neonCyan transition-colors">Customizer Studio</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">Software & Games</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#products" onclick="filterCategory('software')" class="hover:text-neonCyan transition-colors">Bill OS Titanium</a></li>
+                        <li><a href="#products" onclick="filterCategory('software')" class="hover:text-neonCyan transition-colors">Bill AI Suite</a></li>
+                        <li><a href="#products" onclick="filterCategory('games')" class="hover:text-neonCyan transition-colors">HyperShift Racing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">Newsletter</h4>
+                    <form onsubmit="handleNewsletter(event)" class="space-y-2">
+                        <input type="email" required placeholder="Enter email" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-neonCyan">
+                        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-neon text-white font-bold text-xs uppercase tracking-wider shadow-neon-cyan">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+                <div>&copy; 2026 BillSkaf Technologies Inc. All rights reserved.</div>
+                <div class="flex items-center gap-6 text-base">
+                    <a href="#" class="hover:text-neonCyan"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="hover:text-neonCyan"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" class="hover:text-neonCyan"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        // --- Product Data Database ---
+        const productsData = [
+            {
+                id: 'skafbook-pro-x',
+                title: 'SkafBook Pro X',
+                category: 'laptops',
+                badge: 'Flagship Laptop',
+                badgeColor: 'bg-neonCyan/20 text-neonCyan border-neonCyan/40',
+                icon: 'fa-laptop',
+                image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80',
+                tagline: 'Ultra-thin laptop powered by custom Skaf M3 silicon chip.',
+                specs: ['Skaf M3 Silicon 16-Core CPU', '16" 240Hz ProMotion OLED Screen', 'Up to 28 Hours Battery Life', 'Liquid Cooling Vapor Chamber'],
+                description: 'The premier laptop engineered for heavy AI rendering, software development, and AAA ray-traced gaming in an ultra-sleek chassis.'
+            },
+            {
+                id: 'skafphone-ultra',
+                title: 'SkafPhone Ultra',
+                category: 'phones',
+                badge: 'Flagship Smartphone',
+                badgeColor: 'bg-neonPurple/20 text-neonPurple border-neonPurple/40',
+                icon: 'fa-mobile-screen',
+                image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=800&q=80',
+                tagline: '144Hz OLED gaming smartphone with ray-tracing silicon.',
+                specs: ['6.8" 144Hz AMOLED Curved Display', '200MP Quad Pro-Camera System', 'Ray-Tracing Mobile GPU', '65W Fast Wireless Charging'],
+                description: 'A smartphone built with hardware gaming triggers, vapor liquid cooling, and seamless sync with Bill OS Titanium laptops.'
+            },
+            {
+                id: 'bill-os-titanium',
+                title: 'Bill OS Titanium',
+                category: 'software',
+                badge: 'Unified OS',
+                badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
+                icon: 'fa-code',
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+                tagline: 'Cross-device OS bridging laptop, phone, and tablet.',
+                specs: ['Universal App Ecosystem', 'Local Neural AI Engine', 'Sub-millisecond Data Sync', 'Zero-Trust Security Core'],
+                description: 'An ultra-fast operating system designed to run identically across BillSkaf laptops, smartphones, and devices.'
+            },
+            {
+                id: 'hypershift-racing',
+                title: 'HyperShift Racing',
+                category: 'games',
+                badge: 'AAA Game Title',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                icon: 'fa-gamepad',
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
+                tagline: 'Cyberpunk racing game with real-time ray-tracing.',
+                specs: ['Unreal Engine 5 Graphics', 'Cross-Platform PC & Mobile', '100+ Custom Hypercars', 'Dynamic Photorealistic Weather'],
+                description: 'Experience intense multiplayer racing with real-time hardware ray-tracing optimization for SkafBook laptops and SkafPhones.'
+            },
+            {
+                id: 'skafpad-pro',
+                title: 'SkafPad Studio',
+                category: 'laptops',
+                badge: '2-in-1 Tablet',
+                badgeColor: 'bg-neonCyan/20 text-neonCyan border-neonCyan/40',
+                icon: 'fa-tablet-screen-button',
+                image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80',
+                tagline: 'High-performance tablet convertible for creators.',
+                specs: ['13" 120Hz Touch OLED', 'Skaf Stylus Pencil Support', 'Detachable Magnetic Keyboard', '10-Core GPU Engine'],
+                description: 'The ultimate portable creative studio for digital painting, 3D modeling, and mobile laptop productivity.'
+            },
+            {
+                id: 'skafpods-pro',
+                title: 'SkafPods Pro',
+                category: 'phones',
+                badge: 'Spatial Audio',
+                badgeColor: 'bg-neonPurple/20 text-neonPurple border-neonPurple/40',
+                icon: 'fa-headphones',
+                image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=800&q=80',
+                tagline: 'Active noise cancelling wireless gaming earbuds.',
+                specs: ['Active Hybrid ANC', 'Ultra-Low Latency Gaming Mode', '36 Hours Battery Case', 'Spatial 3D Audio Track'],
+                description: 'Zero-latency spatial audio earbuds calibrated for competitive gaming on SkafPhone and SkafBook.'
+            },
+            {
+                id: 'bill-ai-suite',
+                title: 'Bill AI Creator Suite',
+                category: 'software',
+                badge: 'AI Software',
+                badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                icon: 'fa-brain',
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+                tagline: 'On-device local AI generation tools for code & visuals.',
+                specs: ['100% On-Device Processing', 'Real-time Code Assistant', 'Voice to 3D Mesh Engine', 'Privacy Secured'],
+                description: 'Hardware-accelerated AI creation tools tailored specifically for BillSkaf neural silicon.'
+            },
+            {
+                id: 'realm-crafter',
+                title: 'Realm Crafter Online',
+                category: 'games',
+                badge: 'MMO Game',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                icon: 'fa-vr-cardboard',
+                image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80',
+                tagline: 'Massive multiplayer creative universe and sandbox world.',
+                specs: ['10,000+ Player Shard Universe', 'Player-Driven Economy', 'Full VR & Screen Cross-Play', 'Procedural World Engine'],
+                description: 'Build civilizations, craft games inside the game, and explore infinite galaxies with friends across any device.'
+            }
+        ];
+
+        // --- Render Products Grid ---
+        function renderProducts(category = 'all') {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            const filtered = category === 'all' 
+                ? productsData 
+                : productsData.filter(p => p.category === category);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-3xl p-5 glass-panel-hover flex flex-col justify-between border-white/10 group';
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-44 rounded-2xl overflow-hidden mb-4 border border-white/10">
+                            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border backdrop-blur-md ${p.badgeColor}">
+                                ${p.badge}
+                            </span>
+                            <div class="absolute bottom-3 right-3 w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-white text-sm">
+                                <i class="fa-solid ${p.icon}"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 mb-1">
+                            <img src="https://i.imgur.com/nsvHaZQ.jpeg" class="w-4 h-4 rounded object-cover border border-white/30" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                            <span class="text-[10px] font-mono text-neonCyan uppercase font-bold">BillSkaf Line</span>
+                        </div>
+
+                        <h3 class="text-lg font-black text-white group-hover:text-neonCyan transition-colors">${p.title}</h3>
+                        <p class="text-xs text-gray-400 mt-1 leading-relaxed">${p.tagline}</p>
+                        
+                        <div class="mt-4 space-y-1">
+                            ${p.specs.slice(0, 3).map(s => `
+                                <div class="text-[11px] text-gray-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-check text-neonCyan text-[10px]"></i>
+                                    <span>${s}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-white/10">
+                        <button onclick="openModal('${p.id}')" class="w-full py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-white/5 hover:bg-gradient-neon border border-white/10 hover:border-transparent transition-all">
+                            View Specs <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Category Tabs
+        function filterCategory(cat) {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('bg-gradient-neon', 'shadow-neon-cyan', 'text-white');
+                tab.classList.add('text-gray-400');
+            });
+
+            const activeTab = document.getElementById(`tab-${cat}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-gradient-neon', 'shadow-neon-cyan', 'text-white');
+                activeTab.classList.remove('text-gray-400');
+            }
+
+            renderProducts(cat);
+        }
+
+        // Open Detail Modal
+        function openModal(id) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="flex items-center gap-3 mb-3">
+                    <img src="https://i.imgur.com/nsvHaZQ.jpeg" class="w-8 h-8 rounded-lg object-cover border border-neonCyan shadow-neon-cyan" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0a0a0f/00f2fe?text=BS';">
+                    <div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${product.badgeColor}">
+                            ${product.badge}
+                        </span>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-1">${product.title}</h2>
+                <p class="text-xs text-neonCyan font-mono mb-4">${product.tagline}</p>
+                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6">${product.description}</p>
+                
+                <div class="bg-black/50 rounded-2xl p-4 border border-white/10 mb-6">
+                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-3">Full Hardware & Tech Specs</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${product.specs.map(spec => `
+                            <div class="text-xs text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-microchip text-neonCyan"></i> ${spec}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="triggerNotification('Pre-order registered for ${product.title}!'); closeModal();" class="flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-neon shadow-neon-cyan">
+                        Register Pre-Order
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        // Interactive Configurator Controls
+        function setCustomizerDevice(device) {
+            const laptopBtn = document.getElementById('deviceBtnLaptop');
+            const phoneBtn = document.getElementById('deviceBtnPhone');
+            const visualLaptop = document.getElementById('visualLaptop');
+            const visualPhone = document.getElementById('visualPhone');
+
+            if (device === 'laptop') {
+                laptopBtn.className = "py-3 px-4 rounded-xl border border-neonCyan bg-neonCyan/10 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all";
+                phoneBtn.className = "py-3 px-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all";
+                visualLaptop.classList.remove('hidden');
+                visualPhone.classList.add('hidden');
+                updateCustomizerPrice(1899);
+            } else {
+                phoneBtn.className = "py-3 px-4 rounded-xl border border-neonCyan bg-neonCyan/10 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all";
+                laptopBtn.className = "py-3 px-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all";
+                visualPhone.classList.remove('hidden');
+                visualLaptop.classList.add('hidden');
+                updateCustomizerPrice(1199);
+            }
+        }
+
+        function changeCustomizerColor(colorKey, name, hex) {
+            document.getElementById('colorNameLabel').innerText = name;
+            document.getElementById('colorNameLabel').style.color = hex;
+
+            const laptopScreenBody = document.getElementById('laptopScreenBody');
+            const visualPhone = document.getElementById('visualPhone');
+
+            if (laptopScreenBody) laptopScreenBody.style.borderColor = hex;
+            if (visualPhone) visualPhone.style.borderColor = hex;
+        }
+
+        function updateCustomizerPrice(price) {
+            document.getElementById('customizerPrice').innerText = `$${price.toLocaleString()}`;
+        }
+
+        // Particle Canvas Backdrop
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.6 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.color = Math.random() > 0.5 ? '#00f2fe' : '#9d4edd';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        function triggerNotification(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastText').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3500);
+        }
+
+        function handleNewsletter(e) {
+            e.preventDefault();
+            triggerNotification('Subscribed to BillSkaf Tech Intel!');
+            e.target.reset();
+        }
+
+        // Mobile Menu Event Handler
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+
+        // Window Init
+        window.onload = function() {
+            renderProducts('all');
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
